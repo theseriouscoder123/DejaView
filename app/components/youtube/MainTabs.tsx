@@ -11,7 +11,7 @@ import {
 } from 'lucide-react';
 
 // --- Icon Helper ---
-const getIcon = (tabName, props = {}) => {
+const getIcon = (tabName: any, props = {}) => {
   const iconProps = { size: 22, ...props };
   switch (tabName.toLowerCase()) {
     case 'overview':
@@ -30,7 +30,7 @@ const getIcon = (tabName, props = {}) => {
 };
 
 // --- Capitalize Helper ---
-const capitalize = (s) => s.charAt(0).toUpperCase() + s.slice(1);
+const capitalize = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
 
 // --- ResponsiveSidebar Component ---
 interface ResponsiveSidebarProps {

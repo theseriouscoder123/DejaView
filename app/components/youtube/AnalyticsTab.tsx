@@ -13,7 +13,7 @@ import {
   BarChart,
   Bar,
 } from 'recharts';
-
+import { Video } from '@/app/types/youtube.types';
 type ScatterDataPoint = {
   x: number;
   y: number;
@@ -35,25 +35,15 @@ const formatNumber = (num: number): string => {
   return num.toString();
 };
 
-type Video = {
-  id: string;
-  title: string;
-  channelTitle: string;
-  publishedAt: Date;
-  thumbnail: string;
-  categoryId: string;
-  viewCount: number;
-  likeCount: number;
-  commentCount: number;
-  engagementRate: number;
-  ageInHours: number;
-  viralVelocity: number;
-  successScore: number;
-  durationSeconds: number;
-  durationBucket: string;
-  recencyBucket: string;
-  performanceTier: string;
-};
+type DurationBucket = '<3min' | '3-8min' | '8-15min' | '15-30min' | '30min+';
+type RecencyBucket = '<24hrs' | '1-7 days' | '7-30 days' | '30+ days';
+
+interface PerformanceTier {
+  label: 'Mega Viral' | 'Viral' | 'Trending' | 'Rising';
+  color: 'bg-viral' | 'bg-success' | 'bg-warning' | 'bg-info';
+}
+
+
 
 const CHART_COLORS = {
   primary: '#8884d8',
@@ -68,6 +58,8 @@ interface AnalyticsTabProps {
   topVelocity: Video[];
   durationData: DurationDataPoint[];
   heatmapData: number[][];
+  selectedCategory: string;
+  onSelectCategory: (category: string) => void;
 }
 
 interface CustomTooltipProps {
@@ -250,4 +242,3 @@ export default function AnalyticsTab({
     </div>
   );
 }
-

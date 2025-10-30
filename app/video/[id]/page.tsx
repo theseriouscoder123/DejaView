@@ -4,6 +4,7 @@ import { useParams } from 'next/navigation';
 import Link from 'next/link';
 import { TrendingUp, Eye, ThumbsUp, MessageCircle, Clock, Calendar, Award, Zap, Target, BarChart3, Hash, FileText, Settings, ExternalLink, ChevronRight, Play, CheckCircle, XCircle, TrendingDown } from 'lucide-react';
 import { fetchYouTubeVideo } from '@/app/services/youtube.api';
+import Image from 'next/image';
 type VideoData = {
   id: string;
   title: string;
@@ -353,10 +354,15 @@ const VideoDetailsPage = () => {
           onClick={() => window.history.back()}
           className="flex items-center gap-2 text-secondary hover:text-primary transition-colors"
         >
-          <ChevronRight className="rotate-180 w-7 h-7" />
+          <ChevronRight className="rotate-180 w-8 h-8" />
           
         </button>
-          <TrendingUp className="w-7 h-7 text-viral" />
+                <Image
+                      src="/logo.png"
+                      alt="DejaView Logo"
+                      width={42}
+                      height={42}
+                    />
           <h1 className="text-xl font-bold">DejaView</h1>
         </div>
 

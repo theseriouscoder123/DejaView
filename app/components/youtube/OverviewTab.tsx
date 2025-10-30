@@ -1,6 +1,6 @@
 'use client';
 import React, { useMemo } from 'react';
-import { Eye, Target, Zap } from 'lucide-react';
+import { Eye, Heart, Target, Zap } from 'lucide-react';
 import MetricCard from './MetricCard';
 import { formatNumber } from '@/app/utils/youtube.utils';
 import { Video, Category } from '@/app/types/youtube.types';
@@ -89,21 +89,21 @@ export default function OverviewTab({
         Overview
       </h2>
       {/* Hero Metrics */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+<div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <MetricCard
-          icon={<Eye />}
+          icon={<Eye className="w-6 h-6" />}
           label="Average Views"
           value={formatNumber(metrics?.avgViews || 0)}
           color="info"
         />
         <MetricCard
-          icon={<Target />}
+          icon={<Heart className="w-6 h-6" />}
           label="Avg Engagement Rate"
           value={`${metrics?.avgEngagement.toFixed(2)}%`}
           color="success"
         />
         <MetricCard
-          icon={<Zap />}
+          icon={<Zap className="w-6 h-6" />}
           label="Hot Now"
           value={metrics?.hotNow || 0}
           subtitle="< 24 hours"

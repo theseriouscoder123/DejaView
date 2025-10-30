@@ -5,7 +5,7 @@ import { TrendingUp, RefreshCw } from 'lucide-react';
 import { Country } from '@/app/types/youtube.types';
 import CountrySelector from './CountrySelector';
 import { COUNTRIES, CATEGORIES } from '@/app/config/youtube.config';
-
+import Image from 'next/image';
 interface HeaderProps {
   selectedCountryData?: Country;
   lastUpdated: Date | null;
@@ -34,7 +34,12 @@ export default function Header({
       <div className="max-w-7xl mx-auto px-6 py-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <TrendingUp className="w-8 h-8 text-viral" />
+           <Image
+              src="/logo.png"
+              alt="DejaView Logo"
+              width={42}
+              height={42}
+            />
             <h1 className="text-2xl font-bold">DejaView</h1>
           </div>
 

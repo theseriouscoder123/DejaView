@@ -206,7 +206,6 @@ export default function YouTubeDashboard() {
               categories={categoryList}
               selectedCategory={selectedCategory}
               onSelect={setSelectedCategory}
-              country={selectedCountry}
             />
           )}
                               {renderTabContent()}       {" "}

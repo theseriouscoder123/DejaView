@@ -3,7 +3,8 @@
 import React from 'react';
 import Link from 'next/link';
 import { formatDistanceToNow } from 'date-fns';
-import { Video } from '@/app/types/youtube.types';
+import { Video } from "@/app/types/youtube.types";
+
 import { formatNumber } from '@/app/utils/youtube.utils';
 
 interface ExplorerTabProps {
