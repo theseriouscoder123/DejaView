@@ -3,7 +3,8 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { TrendingUp, Users, Video, Eye, ThumbsUp, Calendar, Award, Zap, Target, BarChart3, ExternalLink, ChevronRight, Clock, MessageCircle, PlayCircle } from 'lucide-react';
 import { fetchChannelVideos, fetchYouTubeChannel } from '@/app/services/youtube.api';
-
+import Image from 'next/image';
+import DetailsHeader from '../../components/generic/header';
 type ChannelData = {
   id: string;
   title: string;
@@ -215,41 +216,11 @@ const ChannelDetailsPage = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <header className="sticky top-0 z-50 glass-card border-b border-white/10">
-  <div className="max-w-7xl mx-auto px-6 py-4">
-    <div className="flex items-center justify-between">
-      
-      <div className="flex items-center gap-6">
-        
-        <div className="flex items-center gap-2">
-            <button
-          onClick={() => window.history.back()}
-          className="flex items-center gap-2 text-secondary hover:text-primary transition-colors"
-        >
-          <ChevronRight className="rotate-180 w-7 h-7" />
-          
-        </button>
-          <TrendingUp className="w-7 h-7 text-viral" />
-          <h1 className="text-xl font-bold">DejaView</h1>
-        </div>
-
-        
-      </div>
-
-      <div className="flex items-center gap-3">
-              <a
-                href={`https://www.youtube.com/channel/${channelData.id}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors flex items-center gap-2"
-              >
-                <ExternalLink size={16} />
-                View on YouTube
-              </a>
-            </div>
-    </div>
-  </div>
-</header>
+<DetailsHeader 
+  linkUrl={`https://www.youtube.com/channel/${channelData.id}`}
+  linkText="View on YouTube"
+  linkIcon="youtube"
+/>
 
       <div className="max-w-7xl mx-auto px-6 py-8 space-y-8">
         

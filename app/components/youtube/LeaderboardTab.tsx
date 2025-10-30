@@ -26,19 +26,18 @@ export default function LeaderboardTab({ topVideos }: LeaderboardTabProps) {
 
   return (
     <div>
-<h2 className="text-2xl font-bold mb-6 flex items-center gap-2 text-gray-900">
-  Top Performing Videos
-
-</h2>
-
+      <h2 className="text-xl sm:text-2xl font-bold mb-4 sm:mb-6 flex items-center gap-2 text-gray-900 px-2 sm:px-0">
+        Top Performing Videos
+      </h2>
 
       <div className="space-y-3">
         {topVideos.map((video, idx) => (
           <div
             key={video.id}
-            className="bg-white rounded-xl p-5 hover:shadow-lg transition-all duration-200 border border-gray-100"
+            className="bg-white rounded-xl p-3 sm:p-5 hover:shadow-lg transition-all duration-200 border border-gray-100"
           >
-            <div className="flex items-start gap-4">
+            {/* Desktop Layout */}
+            <div className="hidden sm:flex items-start gap-4">
               {/* Rank Badge */}
               <div className="flex-shrink-0">
                 <div
@@ -61,7 +60,6 @@ export default function LeaderboardTab({ topVideos }: LeaderboardTabProps) {
                     alt={video.title}
                     className="w-48 h-27 object-cover group-hover:scale-105 transition-transform duration-200"
                   />
-                  {/* Performance indicator overlay */}
                   {idx < 3 && (
                     <div className="absolute top-2 right-2 bg-black/70 text-white px-2 py-1 rounded text-xs font-medium backdrop-blur-sm">
                       Top {idx + 1}
@@ -88,7 +86,7 @@ export default function LeaderboardTab({ topVideos }: LeaderboardTabProps) {
                   {video.channelTitle}
                 </Link>
 
-                {/* Stats - Clean and minimal */}
+                {/* Stats */}
                 <div className="flex items-center gap-6 text-sm">
                   <div className="flex items-center gap-1.5 text-gray-700">
                     <Eye className="w-4 h-4 text-gray-400" />
@@ -104,6 +102,79 @@ export default function LeaderboardTab({ topVideos }: LeaderboardTabProps) {
                     <TrendingUp className="w-4 h-4 text-gray-400" />
                     <span className="font-medium">Score: {video.successScore.toFixed(1)}</span>
                   </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Mobile Layout */}
+            <div className="sm:hidden">
+              <div className="flex gap-3 mb-3">
+                {/* Rank Badge - Smaller on mobile */}
+                <div className="flex-shrink-0">
+                  <div
+                    className={`w-10 h-10 rounded-lg flex items-center justify-center font-bold text-base ${getRankStyle(
+                      idx
+                    )}`}
+                  >
+                    {idx + 1}
+                  </div>
+                </div>
+
+                {/* Thumbnail - Smaller on mobile */}
+                <Link 
+                  href={`/video/${video.id}`}
+                  className="flex-shrink-0"
+                >
+                  <div className="relative overflow-hidden rounded-lg">
+                    <img
+                      src={video.thumbnail}
+                      alt={video.title}
+                      className="w-32 h-18 object-cover"
+                    />
+                    {idx < 3 && (
+                      <div className="absolute top-1 right-1 bg-black/70 text-white px-1.5 py-0.5 rounded text-xs font-medium">
+                        #{idx + 1}
+                      </div>
+                    )}
+                  </div>
+                </Link>
+
+                {/* Title - Takes remaining space */}
+                <div className="flex-1 min-w-0">
+                  <Link 
+                    href={`/video/${video.id}`}
+                    className="block"
+                  >
+                    <h3 className="font-semibold text-sm text-gray-900 line-clamp-3">
+                      {video.title}
+                    </h3>
+                  </Link>
+                </div>
+              </div>
+
+              {/* Channel Name */}
+              <Link 
+                href={`/channel/${video.channelId}`}
+                className="text-gray-600 text-xs hover:text-gray-900 transition-colors inline-block mb-2 ml-13"
+              >
+                {video.channelTitle}
+              </Link>
+
+              {/* Stats - Stacked on mobile */}
+              <div className="flex flex-wrap items-center gap-3 text-xs ml-13">
+                <div className="flex items-center gap-1.5 text-gray-700">
+                  <Eye className="w-3.5 h-3.5 text-gray-400" />
+                  <span className="font-medium">{formatNumber(video.viewCount)}</span>
+                </div>
+                
+                <div className="flex items-center gap-1.5 text-gray-700">
+                  <Star className="w-3.5 h-3.5 text-gray-400" />
+                  <span className="font-medium">{video.engagementRate.toFixed(1)}%</span>
+                </div>
+                
+                <div className="flex items-center gap-1.5 text-gray-700">
+                  <TrendingUp className="w-3.5 h-3.5 text-gray-400" />
+                  <span className="font-medium">{video.successScore.toFixed(1)}</span>
                 </div>
               </div>
             </div>
