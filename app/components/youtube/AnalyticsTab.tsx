@@ -35,7 +35,7 @@ const formatNumber = (num: number): string => {
   return num.toString();
 };
 
-type DurationBucket = '<3min' | '3-8min' | '8-15min' | '15-30min' | '30min+';
+type DurationBucket = '<1min' | '1-3min' | '3-8min' | '8-15min' | '15-30min' | '30min+';
 type RecencyBucket = '<24hrs' | '1-7 days' | '7-30 days' | '30+ days';
 
 interface PerformanceTier {
@@ -107,6 +107,8 @@ export default function AnalyticsTab({
   durationData,
   heatmapData,
 }: AnalyticsTabProps) {
+
+console.log(durationData)
   return (
     <div>
       <h2 className="text-2xl font-bold mb-6 flex items-center gap-2 text-gray-900">
