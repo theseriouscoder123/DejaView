@@ -1,6 +1,7 @@
 
 export type DurationBucket =
-  | '<3min'
+  | '<1min'
+  | '1-3min'
   | '3-8min'
   | '8-15min'
   | '15-30min'
