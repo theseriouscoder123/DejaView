@@ -90,64 +90,58 @@ export default function ExplorerTab({ filteredVideos }: ExplorerTabProps) {
       </div>
 
       {/* Mobile Card View */}
-      <div className="lg:hidden space-y-3">
+      {/* Mobile Card View - YouTube Style */}
+      <div className="lg:hidden space-y-4">
         {filteredVideos.map((video, idx) => (
-          <div key={video.id} className="glass-card rounded-xl p-3 sm:p-4">
-            {/* Top Row: Rank + Thumbnail + Title */}
-            <div className="flex gap-3 mb-3">
-              {/* Rank Badge */}
-              <div className="flex-shrink-0 w-8 h-8 bg-card rounded-lg flex items-center justify-center text-sm font-bold text-secondary">
-                {idx + 1}
+          <div key={video.id} className="flex gap-3">
+            {/* Thumbnail with duration overlay */}
+            <Link href={`/video/${video.id}`} className="flex-shrink-0 relative">
+              <img
+                src={video.thumbnail}
+                alt={video.title}
+                className="w-40 h-24 rounded-lg object-cover"
+              />
+              {/* Duration Badge */}
+              <div className="absolute bottom-1 right-1 bg-black/80 px-1.5 py-0.5 rounded text-xs font-medium text-white">
+                {video.durationBucket}
               </div>
+            </Link>
 
-              {/* Thumbnail */}
-              <Link href={`/video/${video.id}`} className="flex-shrink-0">
-                <img
-                  src={video.thumbnail}
-                  alt={video.title}
-                  className="w-28 sm:w-32 h-16 sm:h-18 rounded-lg object-cover"
-                />
+            {/* Content */}
+            <div className="flex-1 min-w-0">
+              {/* Title */}
+              <Link href={`/video/${video.id}`}>
+                <h3 className="text-sm font-medium line-clamp-2 mb-1">{video.title}</h3>
               </Link>
 
-              {/* Title */}
-              <div className="flex-1 min-w-0">
-                <Link href={`/video/${video.id}`}>
-                  <h3 className="text-sm font-semibold line-clamp-3 mb-1">{video.title}</h3>
-                </Link>
-                <Link href={`/channel/${video.channelId}`} className="text-xs text-secondary hover:text-primary">
-                  {video.channelTitle}
-                </Link>
-              </div>
-            </div>
+              {/* Channel */}
+              <Link href={`/channel/${video.channelId}`} className="text-xs text-secondary hover:text-primary block mb-2">
+                {video.channelTitle}
+              </Link>
 
-            {/* Stats Grid */}
-            <div className="grid grid-cols-2 gap-2 text-xs ml-11">
-              <div className="flex items-center gap-1.5">
-                <Eye className="w-3.5 h-3.5 text-secondary" />
-                <span className="font-medium">{formatNumber(video.viewCount)}</span>
-              </div>
-
-              <div className="flex items-center gap-1.5">
-                <TrendingUp className="w-3.5 h-3.5 text-success" />
-                <span className="font-medium text-success">{video.engagementRate.toFixed(1)}%</span>
+              {/* Stats Row */}
+              <div className="flex items-center gap-2 text-xs text-secondary mb-2">
+                <span className="flex items-center gap-1">
+                  <Eye className="w-3 h-3" />
+                  {formatNumber(video.viewCount)}
+                </span>
+                <span>•</span>
+                <span className="flex items-center gap-1">
+                  <Calendar className="w-3 h-3" />
+                  {formatTimeAgo(video.publishedAt)}
+                </span>
               </div>
 
-              <div className="flex items-center gap-1.5">
-                <Clock className="w-3.5 h-3.5 text-secondary" />
-                <span className="text-secondary">{video.durationBucket}</span>
+              {/* Metrics Row */}
+              <div className="flex items-center gap-2 text-xs">
+                <span className={`px-2 py-0.5 rounded-full font-medium ${video.performanceTier.color} bg-opacity-20`}>
+                  {video.performanceTier.label}
+                </span>
+                <span className="flex items-center gap-1 text-success font-medium">
+                  <TrendingUp className="w-3 h-3" />
+                  {video.engagementRate.toFixed(1)}%
+                </span>
               </div>
-
-              <div className="flex items-center gap-1.5">
-                <Calendar className="w-3.5 h-3.5 text-secondary" />
-                <span className="text-secondary">{formatTimeAgo(video.publishedAt)}</span>
-              </div>
-            </div>
-
-            {/* Tier Badge */}
-            <div className="mt-3 ml-11">
-              <span className={`inline-block px-2.5 py-1 rounded-full text-xs font-medium ${video.performanceTier.color} bg-opacity-20`}>
-                {video.performanceTier.label}
-              </span>
             </div>
           </div>
         ))}

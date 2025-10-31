@@ -33,7 +33,7 @@ export default function CountrySelector({
       </button>
 
       {showDropdown && (
-        <div className="absolute right-0 mt-2 w-56 glass-card rounded-lg shadow-2xl overflow-hidden z-50">
+        <div className="absolute  mt-2 w-56 glass-card rounded-lg shadow-2xl overflow-hidden z-50 lg:right-0 lg:left-auto">
           <div className="max-h-96 overflow-y-auto">
             {countries.map((country) => (
               <button

@@ -19,7 +19,8 @@ export const formatNumber = (num: number): string => {
 };
 
 export const getDurationBucket = (seconds: number): DurationBucket => {
-  if (seconds < 180) return '<3min';
+  if (seconds <= 60) return '<1min';
+  if (seconds < 180) return '1-3min';
   if (seconds < 480) return '3-8min';
   if (seconds < 900) return '8-15min';
   if (seconds < 1800) return '15-30min';

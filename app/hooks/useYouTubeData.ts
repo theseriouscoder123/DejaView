@@ -107,7 +107,7 @@ export const useYouTubeData = (
       buckets[bucket].totalEngagement += v.engagementRate;
     });
 
-    const order = ['<3min', '3-8min', '8-15min', '15-30min', '30min+'];
+    const order = ['<1min','1-3min', '3-8min', '8-15min', '15-30min', '30min+'];
     return order.map((bucket) => ({
       bucket,
       count: buckets[bucket]?.count || 0,
