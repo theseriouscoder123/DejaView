@@ -36,3 +36,18 @@ body {
   border: 1px solid rgba(0, 0, 0, 0.08);
 }
 
+@utility glass-very-light {
+  background: rgba(255, 255, 255, 0.3); 
+  backdrop-filter: blur(5px);
+  border: 1px solid rgba(0, 0, 0, 0.1); 
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+}
+/* Hide scrollbar while keeping scroll functionality */
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
+.scrollbar-none {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: 0;     /* Firefox */
+}
+

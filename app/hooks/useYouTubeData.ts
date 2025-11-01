@@ -77,7 +77,50 @@ export const useYouTubeData = (
       .sort((a, b) => b.successScore - a.successScore)
       .slice(0, 10);
   }, [videos]);
+    const techStats = useMemo(() => {
+    if (videos.length === 0)
+      return {
+        subtitlePercent: 0,
+        k4Percent: 0,
+        emojiTitlePercent: 0,
+        customThumbPercent: 0,
+        taggedPercent: 0,
+      };
 
+    const total = videos.length;
+    const subtitleCount = videos.filter((v) => v.hasSubtitles).length;
+    const k4Count = videos.filter((v) => v.is4k).length;
+    const emojiTitleCount = videos.filter((v) => v.hasEmojiInTitle).length;
+    const customThumbCount = videos.filter((v) => v.hasCustomThumbnail).length;
+    const taggedCount = videos.filter((v) => v.hasTags).length;
+
+    return {
+      subtitlePercent: (subtitleCount / total) * 100,
+      k4Percent: (k4Count / total) * 100,
+      emojiTitlePercent: (emojiTitleCount / total) * 100,
+      customThumbPercent: (customThumbCount / total) * 100,
+      taggedPercent: (taggedCount / total) * 100,
+    };
+  }, [videos]);
+
+const tagFrequency = useMemo(() => {
+  const tags: { [key: string]: number } = {};
+
+  videos.forEach((v) => {
+    if (Array.isArray(v.tags)) {
+      v.tags.forEach((tag) => {
+        const cleanTag = tag.toLowerCase().trim();
+        if (cleanTag.length > 1) {
+          tags[cleanTag] = (tags[cleanTag] || 0) + 1;
+        }
+      });
+    }
+  });
+
+  return Object.entries(tags)
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 30); // Slightly more tags than title words
+}, [videos]);
   const scatterData = useMemo(() => {
     return videos.map((v) => ({
       x: v.viewCount,
@@ -174,7 +217,126 @@ export const useYouTubeData = (
     });
     return counts;
   }, [videos]);
+const avgMetrics = useMemo(() => {
+  if (videos.length === 0)
+    return {
+      averageTimeToTrend: 0,
+      averageDuration: 0,
+      averageTitleLength: 0,
+      averageDescriptionLength: 0,
+    };
 
+  console.log('=== AVG METRICS DEBUG ===');
+  console.log('Total videos:', videos.length);
+  console.log('Sample video ageInHours:', videos[0]?.ageInHours);
+  console.log('Sample video durationSeconds:', videos[0]?.durationSeconds);
+  console.log('Sample video title length:', videos[0]?.title?.length);
+  console.log('Sample video description length:', videos[0]?.description?.length);
+
+  const totalTimeToTrend = videos.reduce(
+    (sum, v) => sum + (v.ageInHours || 0),
+    0
+  );
+  const totalDuration = videos.reduce(
+    (sum, v) => sum + (v.durationSeconds || 0),
+    0
+  );
+  const totalTitleLength = videos.reduce(
+    (sum, v) => sum + (v.title?.length || 0),
+    0
+  );
+  const totalDescriptionLength = videos.reduce(
+    (sum, v) => sum + (v.description?.length || 0),
+    0
+  );
+
+  console.log('Totals:', {
+    totalTimeToTrend,
+    totalDuration,
+    totalTitleLength,
+    totalDescriptionLength
+  });
+
+  const result = {
+    averageTimeToTrend: totalTimeToTrend / videos.length,
+    averageDuration: totalDuration / videos.length,
+    averageTitleLength: totalTitleLength / videos.length,
+    averageDescriptionLength: totalDescriptionLength / videos.length,
+  };
+
+  console.log('Averages:', result);
+
+  return result;
+}, [videos]);
+const externalLinks = useMemo(() => {
+  const domainCounts: { [key: string]: number } = {};
+  
+  // Regex to match URLs in descriptions
+  const urlRegex = /https?:\/\/(?:www\.)?([a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)+)(?:\/[^\s]*)?/gi;
+  
+  videos.forEach((v) => {
+    if (v.description) {
+      const urls = v.description.matchAll(urlRegex);
+      
+      for (const match of urls) {
+        let domain = match[1].toLowerCase();
+        
+        // Normalize common variations
+        domain = domain
+          .replace(/^(www\.|m\.)/, '') // Remove www. or m. prefix
+          .replace(/\.com\..*$/, '.com') // Handle country-specific domains
+          .replace(/\.co\..*$/, '.co'); // Handle .co.uk, .co.in, etc.
+        
+        // Group common platforms
+        if (domain.includes('youtu.be') || domain.includes('youtube.com')) {
+          domain = 'youtube.com';
+        } else if (domain.includes('instagram.com') || domain.includes('instagr.am')) {
+          domain = 'instagram.com';
+        } else if (domain.includes('twitter.com') || domain.includes('x.com')) {
+          domain = 'twitter.com/x.com';
+        } else if (domain.includes('discord.gg') || domain.includes('discord.com')) {
+          domain = 'discord.gg';
+        } else if (domain.includes('facebook.com') || domain.includes('fb.me')) {
+          domain = 'facebook.com';
+        } else if (domain.includes('tiktok.com')) {
+          domain = 'tiktok.com';
+        } else if (domain.includes('twitch.tv')) {
+          domain = 'twitch.tv';
+        } else if (domain.includes('patreon.com')) {
+          domain = 'patreon.com';
+        } else if (domain.includes('ko-fi.com')) {
+          domain = 'ko-fi.com';
+        } else if (domain.includes('shopify.com') || domain.includes('myshopify.com')) {
+          domain = 'shopify.com';
+        } else if (domain.includes('gofundme.com')) {
+          domain = 'gofundme.com';
+        } else if (domain.includes('linktree') || domain.includes('linktr.ee')) {
+          domain = 'linktr.ee';
+        } else if (domain.includes('spotify.com')) {
+          domain = 'spotify.com';
+        } else if (domain.includes('apple.com')) {
+          domain = 'apple.com';
+        }
+        
+        domainCounts[domain] = (domainCounts[domain] || 0) + 1;
+      }
+    }
+  });
+  
+  // Calculate percentages and return top 5
+  const totalVideos = videos.length;
+  const topDomains = Object.entries(domainCounts)
+    .map(([domain, count]) => ({
+      domain,
+      count,
+      percentage: totalVideos > 0 ? ((count / totalVideos) * 100).toFixed(1) : '0',
+      videosWithLink: count,
+    }))
+    .sort((a, b) => b.count - a.count)
+    .slice(0, 5);
+  
+  return topDomains;
+}, [videos]);
   return {
     videos,
     loading,
@@ -188,6 +350,10 @@ export const useYouTubeData = (
     heatmapData,
     wordFrequency,
     recencyData,
+    tagFrequency,
+    avgMetrics,
+    techStats,
+    externalLinks,
   };
 };
 

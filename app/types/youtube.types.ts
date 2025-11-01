@@ -25,9 +25,11 @@ export interface Video {
   publishedAt: Date;
   thumbnail: string;
   categoryId: string;
+  description: string;
   channelId: string;
   lang: string;
   viewCount: number;
+  tags: string[];
   likeCount: number;
   commentCount: number;
   engagementRate: number;
@@ -38,6 +40,13 @@ export interface Video {
   durationBucket: DurationBucket;
   recencyBucket: RecencyBucket;
   performanceTier: PerformanceTier;
+  hasSubtitles: boolean;
+  isHD: boolean;
+  hasEmojiInTitle: boolean;
+  hasCustomThumbnail: boolean;
+  hasTags: boolean;
+  isShorts: boolean;
+  is4k: boolean;
 }
 
 export interface Country {

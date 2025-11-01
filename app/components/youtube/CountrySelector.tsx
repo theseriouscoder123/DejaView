@@ -32,24 +32,25 @@ export default function CountrySelector({
         <ChevronDown className="w-4 h-4" />
       </button>
 
-      {showDropdown && (
-        <div className="absolute  mt-2 w-56 glass-card rounded-lg shadow-2xl overflow-hidden z-50 lg:right-0 lg:left-auto">
-          <div className="max-h-96 overflow-y-auto">
-            {countries.map((country) => (
-              <button
-                key={country.code}
-                onClick={() => onSelect(country.code)}
-                className={`w-full px-4 py-3 text-left hover:bg-white/10 transition-colors flex items-center gap-3 ${
-                  selectedCountry?.code === country.code ? 'bg-white/5' : ''
-                }`}
-              >
-                <span className="text-xl">{country.flag}</span>
-                <span className="text-sm">{country.name}</span>
-              </button>
-            ))}
-          </div>
-        </div>
-      )}
+   {showDropdown && (
+  <div className="absolute mt-2 w-56 bg-white rounded-lg shadow-2xl z-50 lg:right-0 lg:left-auto">
+    <div className="max-h-96 overflow-y-auto scrollbar-none">
+      {countries.map((country) => (
+        <button
+          key={country.code}
+          onClick={() => onSelect(country.code)}
+          className={`w-full px-4 py-3 text-left hover:bg-white/10 transition-colors flex items-center gap-3 ${
+            selectedCountry?.code === country.code ? "bg-white/5" : ""
+          }`}
+        >
+          <span className="text-xl">{country.flag}</span>
+          <span className="text-sm">{country.name}</span>
+        </button>
+      ))}
+    </div>
+  </div>
+)}
+
     </div>
   );
 }

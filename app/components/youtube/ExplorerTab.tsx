@@ -1,5 +1,5 @@
 'use client';
-import React from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
 import { Video } from "@/app/types/youtube.types";
 import { formatNumber } from '@/app/utils/youtube.utils';
@@ -8,6 +8,8 @@ import { Eye, TrendingUp, Clock, Calendar } from 'lucide-react';
 interface ExplorerTabProps {
   filteredVideos: Video[];
 }
+
+type FilterType = "All" | "Videos" | "Shorts";
 
 // Helper function to format date
 const formatTimeAgo = (date: Date | string) => {
@@ -28,9 +30,38 @@ const formatTimeAgo = (date: Date | string) => {
 };
 
 export default function ExplorerTab({ filteredVideos }: ExplorerTabProps) {
+  const [filter, setFilter] = useState<FilterType>("All");
+
+  // Apply filter based on selection
+  const displayedVideos = filteredVideos.filter(video => {
+    if (filter === "All") return true;
+    if (filter === "Shorts") return video.isShorts;
+    if (filter === "Videos") return !video.isShorts;
+    return true;
+  });
+
   return (
     <div>
-      <h2 className="text-xl sm:text-2xl font-bold mb-4 sm:mb-6 px-2 sm:px-0">Video Explorer</h2>
+      <div className="flex items-center justify-between mb-4 sm:mb-6 px-2 sm:px-0">
+        <h2 className="text-xl sm:text-2xl font-bold">Video Explorer</h2>
+        
+        {/* Filter Buttons */}
+        <div className="flex gap-2">
+          {(["All", "Videos", "Shorts"] as FilterType[]).map((filterType) => (
+            <button
+              key={filterType}
+              onClick={() => setFilter(filterType)}
+              className={`px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg text-sm font-medium transition-all ${
+                filter === filterType
+                  ? 'bg-primary text-white'
+                  : 'bg-card text-secondary hover:bg-card/80'
+              }`}
+            >
+              {filterType}
+            </button>
+          ))}
+        </div>
+      </div>
       
       {/* Desktop Table View */}
       <div className="hidden lg:block glass-card rounded-xl overflow-hidden">
@@ -49,7 +80,7 @@ export default function ExplorerTab({ filteredVideos }: ExplorerTabProps) {
               </tr>
             </thead>
             <tbody className="divide-y divide-white/10">
-              {filteredVideos.map((video, idx) => (
+              {displayedVideos.map((video, idx) => (
                 <tr key={video.id} className="hover:bg-card/50 transition-colors">
                   <td className="px-4 py-3 text-sm text-secondary">{idx + 1}</td>
                   <td className="px-4 py-3">
@@ -90,9 +121,8 @@ export default function ExplorerTab({ filteredVideos }: ExplorerTabProps) {
       </div>
 
       {/* Mobile Card View */}
-      {/* Mobile Card View - YouTube Style */}
       <div className="lg:hidden space-y-4">
-        {filteredVideos.map((video, idx) => (
+        {displayedVideos.map((video, idx) => (
           <div key={video.id} className="flex gap-3">
             {/* Thumbnail with duration overlay */}
             <Link href={`/video/${video.id}`} className="flex-shrink-0 relative">

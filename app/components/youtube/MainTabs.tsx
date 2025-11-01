@@ -1,6 +1,8 @@
 'use client';
 
 import React, { useState } from 'react';
+import Link from 'next/link';
+import { usePathname , useParams} from 'next/navigation';
 import {
   LayoutDashboard,
   ChartScatter,
@@ -32,23 +34,24 @@ const getIcon = (tabName: any, props = {}) => {
 // --- Capitalize Helper ---
 const capitalize = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
 
-// --- ResponsiveSidebar Component ---
-interface ResponsiveSidebarProps {
-  tabs: string[];
-  activeTab: string;
-  onSelectTab: (tab: string) => void;
-  isExpanded: boolean;
-  setExpanded: (expanded: boolean) => void;
-}
+// --- Tab Configuration ---
+const TABS = [
+  { id: "overview", label: "Overview" },
+  { id: "leaderboard", label: "Leaderboard" },
+  { id: "analytics", label: "Analytics" },
+  { id: "intelligence", label: "Intelligence" },
+  { id: "explorer", label: "Explorer" },
+];
 
-export default function ResponsiveSidebar({
-  tabs,
-  activeTab,
-  onSelectTab,
-  isExpanded,
-  setExpanded,
-}: ResponsiveSidebarProps) {
+// --- ResponsiveSidebar Component ---
+export default function ResponsiveSidebar() {
   const [hoveredTab, setHoveredTab] = useState<string | null>(null);
+  const pathname = usePathname();
+  const params = useParams<{ country: string; category: string }>();
+  const {country, category} = params
+  
+  // Determine active tab from pathname
+  const activeTab = TABS.find(tab => pathname?.includes(`/${country}/${category}/${tab.id}`))?.id || 'overview';
 
   return (
     <>
@@ -59,11 +62,11 @@ export default function ResponsiveSidebar({
         <nav className="flex-1 px-4 py-6 mt-24">
           {/* Nav Items */}
           <ul className="space-y-3">
-            {tabs.map((tab) => (
-              <li key={tab} className="relative">
-                <button
-                  onClick={() => onSelectTab(tab)}
-                  onMouseEnter={() => setHoveredTab(tab)}
+            {TABS.map((tab) => (
+              <li key={tab.id} className="relative">
+                <Link
+                  href={`/${country}/${category}/${tab.id == "overview"? "" : tab.id}`}
+                  onMouseEnter={() => setHoveredTab(tab.id)}
                   onMouseLeave={() => setHoveredTab(null)}
                   className={`
                     flex items-center justify-center w-full h-12 rounded-lg
@@ -72,19 +75,19 @@ export default function ResponsiveSidebar({
                     hover:text-gray-900 
                     transition-all duration-200
                     ${
-                      activeTab === tab
+                      activeTab === tab.id
                         ? 'bg-blue-50 text-blue-600 font-medium'
                         : ''
                     }
                   `}
                 >
                   <div className="flex-shrink-0">
-                    {getIcon(tab, { size: 20, strokeWidth: activeTab === tab ? 2.5 : 2 })}
+                    {getIcon(tab.id, { size: 20, strokeWidth: activeTab === tab.id ? 2.5 : 2 })}
                   </div>
-                </button>
+                </Link>
                 
                 {/* Tooltip */}
-                {hoveredTab === tab && (
+                {hoveredTab === tab.id && (
                   <div
                     className="
                       absolute left-full ml-2 top-1/2 -translate-y-1/2
@@ -97,7 +100,7 @@ export default function ResponsiveSidebar({
                       animate-in fade-in slide-in-from-left-1 duration-200
                     "
                   >
-                    {capitalize(tab)}
+                    {tab.label}
                     {/* Arrow */}
                     <div
                       className="
@@ -113,7 +116,7 @@ export default function ResponsiveSidebar({
         </nav>
       </aside>
 
-      {/* 2. MOBILE BOTTOM NAV (Hidden on desktop) - Unchanged */}
+      {/* 2. MOBILE BOTTOM NAV (Hidden on desktop) */}
       <nav
         className="
           md:hidden fixed bottom-0 left-0 w-full h-16 z-20
@@ -121,24 +124,24 @@ export default function ResponsiveSidebar({
           flex justify-around items-center
         "
       >
-        {tabs.map((tab) => (
-          <button
-            key={tab}
-            onClick={() => onSelectTab(tab)}
+        {TABS.map((tab) => (
+          <Link
+            key={tab.id}
+            href={`/dashboard/${tab.id}`}
             className={`
               flex flex-col items-center justify-center w-full h-full
               rounded-lg
               transition-all duration-200
               ${
-                activeTab === tab
+                activeTab === tab.id
                   ? 'text-blue-600 '
                   : 'text-gray-500 hover:text-blue-500'
               }
             `}
           >
-            {getIcon(tab, { size: 20, strokeWidth: activeTab === tab ? 2.5 : 2 })}
-            <span className="text-xs font-medium mt-1">{capitalize(tab)}</span>
-          </button>
+            {getIcon(tab.id, { size: 20, strokeWidth: activeTab === tab.id ? 2.5 : 2 })}
+            <span className="text-xs font-medium mt-1">{tab.label}</span>
+          </Link>
         ))}
       </nav>
     </>

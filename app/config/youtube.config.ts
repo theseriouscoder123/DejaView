@@ -12,7 +12,7 @@ export const API_KEY = process.env.NEXT_PUBLIC_YOUTUBE_API_KEY;
 export const BASE_URL = 'https://www.googleapis.com/youtube/v3';
 
 export const COUNTRIES: Country[] = [
-  { code: 'all', name: 'Global', flag: '🌍' },
+  { code: 'global', name: 'Global', flag: '🌍' },
   { code: 'IN', name: 'India', flag: '🇮🇳' },
   { code: 'US', name: 'United States', flag: '🇺🇸' },
   { code: 'GB', name: 'United Kingdom', flag: '🇬🇧' },

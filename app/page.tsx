@@ -1,7 +1,6 @@
-"use client"
-
-import YouTubeDashboard from '@/app/components/YouTubeDashboard';
+// app/page.tsx
+import { redirect } from 'next/navigation';
 
 export default function Home() {
-  return <YouTubeDashboard />;
+  redirect('/IN/all');
 }
